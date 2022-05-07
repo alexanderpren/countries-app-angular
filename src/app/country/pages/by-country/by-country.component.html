@@ -3,12 +3,13 @@
 
 <div class="row">
   <div class="col">
-    <form action="" autocomplete="off">
+    <form (ngSubmit)="search()" autocomplete="off">
       <input
         type="text"
         class="form-control"
         name="country"
         placeholder="Buscar País"
+        [(ngModel)]="country"
       />
     </form>
   </div>
@@ -16,9 +17,11 @@
 
 <hr />
 
-<div class="alert alert-danger">No se encontro nada con el país:</div>
+<div *ngIf="isError" class="alert alert-danger">
+  No se encontro nada con el país: {{ country }}
+</div>
 
-<div class="row">
+<div *ngIf="countries" class="row">
   <div class="col">
     <table class="table table-hover">
       <thead>
@@ -31,12 +34,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Bandera</td>
-          <td>Nombre</td>
-          <td>Poblacion</td>
-          <td><a href="#">Ver...</a></td>
+        <tr *ngFor="let country of countries; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <img [src]="country.flag" [alt]="country.name" class="small-flag" />
+          </td>
+          <td>{{ country.name }}</td>
+          <td>{{ country.population | number }}</td>
+          <td>
+            <a [routerLink]="['/country', 'country.alpha2code']">Ver...</a>
+          </td>
         </tr>
       </tbody>
     </table>
