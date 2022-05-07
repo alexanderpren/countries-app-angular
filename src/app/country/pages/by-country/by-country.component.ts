@@ -8,13 +8,17 @@ import { CountryService } from '../../services/country.service';
   styles: [],
 })
 export class ByCountryComponent {
-  country: string = 'Mexico';
+  constructor(private countryService: CountryService) {}
+
+  word: string = 'Mexico';
   isError: boolean = false;
   countries: Country[] = [];
-  constructor(private countryService: CountryService) {}
-  search() {
+
+  search(wordToSearch: string) {
     this.isError = false;
-    this.countryService.searchByCountry(this.country).subscribe({
+    this.word = wordToSearch;
+
+    this.countryService.searchByCountry(this.word).subscribe({
       next: (countries) => {
         this.countries = countries;
       },
@@ -25,5 +29,10 @@ export class ByCountryComponent {
       },
       complete: () => console.info('complete'),
     });
+  }
+
+  suggestions(wordToSearch: string) {
+    this.isError = false;
+    this.word = wordToSearch;
   }
 }
