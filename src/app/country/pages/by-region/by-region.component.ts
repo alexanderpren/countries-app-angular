@@ -1,16 +1,46 @@
 import { Component, OnInit } from '@angular/core';
+import { Country } from '../../interfaces/country.interface';
+import { CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-by-region',
   templateUrl: './by-region.component.html',
-  styles: [
-  ]
+  styles: [],
 })
-export class ByRegionComponent implements OnInit {
+export class ByRegionComponent {
+  regions: string[] = [
+    'eu',
+    'efta',
+    'caricom',
+    'pa',
+    'au',
+    'usan',
+    'eeu',
+    'al',
+    'asean',
+    'cais',
+    'cefta',
+    'nafta',
+    'saarc',
+  ];
 
-  constructor() { }
+  activeRegion: string = '';
+  countriesByContinent: Country[] = [];
 
-  ngOnInit(): void {
+  constructor(private countryService: CountryService) {}
+
+  changeActiveRegion(region: string) {
+    if (this.activeRegion === region) return;
+    this.countriesByContinent = [];
+    this.activeRegion = region;
+    this.countryService.searchByRegion(region).subscribe((countries) => {
+      this.countriesByContinent = countries;
+    });
   }
 
+  getClassCSSButton(region: string) {
+    return region === this.activeRegion
+      ? 'btn btn-primary'
+      : 'btn btn-outline-primary';
+  }
 }

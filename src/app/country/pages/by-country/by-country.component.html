@@ -1,17 +1,34 @@
-<h2>By Country</h2>
-<hr />
+<div class="animate__animated animate__fadeIn animate__faster">
+  <h2>By Country</h2>
+  <hr />
 
-<div class="row">
-  <div class="col">
-    <app-country-input
-      (onEnter)="search($event)"
-      (onDebounce)="suggestions($event)"
-      placeholder="Search Country..."
-    ></app-country-input>
+  <div class="row">
+    <div class="col">
+      <app-country-input
+        (onEnter)="search($event)"
+        (onDebounce)="getSuggestions($event)"
+        placeholder="Search Country..."
+      ></app-country-input>
+    </div>
   </div>
+  <ul *ngIf="showSuggestions" class="list-group">
+    <li
+      *ngFor="let country of suggestions"
+      class="list-group-item list-group-item-action"
+    >
+      <a class="nav-link" [routerLink]="['/country', country.alpha2Code]">{{
+        country.name
+      }}</a>
+    </li>
+    <li
+      class="list-group-item list-group-item-action"
+      (click)="searchSuggestions(word)"
+    >
+      <a class="nav-link">Search "{{ word }}"</a>
+    </li>
+  </ul>
+  <hr />
 </div>
-
-<hr />
 
 <div *ngIf="isError" class="alert alert-danger">
   We can't found anything with the name: {{ word }}

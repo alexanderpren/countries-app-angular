@@ -5,7 +5,13 @@ import { CountryService } from '../../services/country.service';
 @Component({
   selector: 'app-by-country',
   templateUrl: './by-country.component.html',
-  styles: [],
+  styles: [
+    `
+      li {
+        cursor: pointer;
+      }
+    `,
+  ],
 })
 export class ByCountryComponent {
   constructor(private countryService: CountryService) {}
@@ -13,8 +19,11 @@ export class ByCountryComponent {
   word: string = 'Mexico';
   isError: boolean = false;
   countries: Country[] = [];
+  suggestions: Country[] = [];
+  showSuggestions: boolean = false;
 
   search(wordToSearch: string) {
+    this.showSuggestions = false;
     this.isError = false;
     this.word = wordToSearch;
 
@@ -31,8 +40,24 @@ export class ByCountryComponent {
     });
   }
 
-  suggestions(wordToSearch: string) {
+  getSuggestions(wordToSearch: string) {
     this.isError = false;
     this.word = wordToSearch;
+    this.showSuggestions = true;
+    this.countryService.searchByCountry(wordToSearch).subscribe(
+      (countries) => (this.suggestions = countries.splice(0, 5)),
+      (e) => {
+        console.error(e);
+        this.isError = true;
+        this.suggestions = [];
+      }
+    );
+  }
+
+  searchSuggestions(wordToSearch: string) {
+    this.isError = false;
+    this.word = wordToSearch;
+    this.showSuggestions = true;
+    this.search(wordToSearch);
   }
 }
